@@ -7,6 +7,15 @@ ARG S6_OVERLAY_VERSION=3.1.5.0
 ARG TARGETARCH
 ARG BUILD_ARCH=${TARGETARCH}
 RUN \
+    curl -fsSLo - https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/google-cloud-packages-archive-keyring.gpg \
+    \
+    && echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list \
+    && echo "libedgetpu1-max libedgetpu/accepted-eula select true" | debconf-set-selections \
+    \
+    && apt-get update \
+    && apt-get install --no-install-recommends --no-install-suggests -y libedgetpu1-max
+
+RUN \
     apt-get update \
     \
     && apt-get install -y --no-install-recommends \
